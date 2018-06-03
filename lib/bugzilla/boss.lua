@@ -10,7 +10,7 @@ Boss.messages.spawn_messages = {
   "BugZilla is prepairing an attack, being prepared would be advised.",
   "BugZilla found your hiding place, she will come after you...",
   "BugZilla couldn't sleep with all the noise... She might come silence you.",
-  "Darkness falls upon the land... Evil is comming..."
+  "Darkness falls upon the land... Evil is coming..."
 }
 Boss.messages.kill_messages = {
   "BugZilla died, let's hope there aren't any others...",
@@ -188,6 +188,9 @@ function Boss.Despawn(self)
   global.BZ_boss.entities = bossEntities
   global.BZ_boss.entityCount = bossEntityCount
   global.BZ_boss.killScore = bossKillScore
+
+  -- update UI
+  DeathUI:UpdateAllLabels()
 end
 
 
@@ -240,6 +243,9 @@ function Boss.OnEntityDied(self, event)
     global.BZ_boss.entities = bossEntities
     global.BZ_boss.entityCount = bossEntityCount
     global.BZ_boss.killScore = bossKillScore
+
+    -- update UI
+    DeathUI:UpdateAllLabels()
 
     -- Now we deleted the boss, check if we need to go to nextPhase
     if bossEntityCount == 0 then

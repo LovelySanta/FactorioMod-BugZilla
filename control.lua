@@ -1,17 +1,26 @@
 require 'lib/utilities/math'
-require 'lib/bugzilla/phase-cycler'
+require 'lib/utilities/generic'
+
+require 'lib/bugzilla/despawn-penalty'
 require 'lib/bugzilla/boss'
-require 'lib/bugzilla/deathscream'
-require 'lib/bugzilla/death-ui'
+require 'lib/bugzilla/phase-cycler'
+
+require 'lib/death-ui'
+require 'lib/deathscream'
+require 'lib/corpse-flare'
 
 
 
 -- on load game for first time
 script.on_init(function(_)
   Math:Init()
+
   PhaseCycler:Init()
+  DespawnPenalty:Init()
   Boss:Init()
+
   DeathUI:Init()
+  CorpseFlare:Init()
 end)
 
 
@@ -19,7 +28,10 @@ end)
 -- on mod version different or if mod did not previously exist
 script.on_configuration_changed(function(data)
   if data.mod_changes and data.mod_changes.BugZilla and data.mod_changes.BugZilla.old_version then
-    Boss:OnConfigurationChanged(data)
+    Boss:OnConfigurationChanged()
+    DespawnPenalty:OnConfigurationChanged()
+
+    DeathUI:OnConfigurationChanged()
   end
 end)
 
@@ -44,6 +56,7 @@ script.on_event(defines.events.on_tick, function(event)
   if game.tick % 60 == 0 then -- each second
     PhaseCycler:OnSecond()
     Boss:OnSecond()
+    DespawnPenalty:OnSecond()
   end
 end)
 
@@ -59,15 +72,23 @@ end)
 -- called every time an entity die
 script.on_event(defines.events.on_entity_died, function(event)
   Boss:OnEntityDied(event)
+  DespawnPenalty:OnEntityDied(event.entity)
+end)
+
+
+
+-- called every time a player died
+script.on_event(defines.events.on_pre_player_died, function(event)
+  -- check for corpse flare
+  CorpseFlare:OnPrePlayerDied(event.player_index)
 end)
 
 
 
 -- called every time a player died
 script.on_event(defines.events.on_player_died, function(event)
-  -- Creat deathscream
+  -- Create deathscream
   Deathscream:CreateScream(event.player_index)
-
   -- Update the deathcounter
   DeathUI:AddDeath(event.player_index)
 end)

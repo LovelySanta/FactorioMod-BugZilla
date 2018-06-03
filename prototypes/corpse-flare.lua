@@ -1,20 +1,67 @@
-local fart_duration = 60 * 5 -- in ticks
-local fart_damage = 30 -- each interval
-local fart_damage_interval = 30 -- in ticks
-local fart_range = 6 -- radius
+local flare_duration = 60 * 60 * 2 -- in ticks
+local flare_range = 2 -- radius
+
 
 data:extend({
   {
-    type = "damage-type",
-    name = "toxic-gas"
+    type = "item",
+    name = "corpse-flare",
+    icon = "__BugZilla__/graphics/entity/corpse-flare.png",
+    icon_size = 200,
+    flags = {"goes-to-main-inventory"},
+    subgroup = "tool",
+    order = "z[mining]-z[shovel]",
+    stack_size = 1
+  },
+
+  {
+    type = "recipe",
+    name = "corpse-flare",
+    enabled = false,
+    ingredients =
+    {
+      {type="item", name="electronic-circuit", amount=5},
+      {type="item", name="small-lamp", amount=5},
+      {type="item", name="grenade", amount=1}
+    },
+    energy_required = 5,
+    result= "corpse-flare",
+    result_count = 1
+  },
+
+  {
+    type = "technology",
+    name = "corpse-flare",
+    prerequisites = {"military-2"},
+    icon = "__BugZilla__/graphics/entity/corpse-flare.png",
+    icon_size = 200,
+    unit =
+    {
+      count = 100,
+      ingredients =
+      {
+        {"science-pack-1", 1},
+        {"science-pack-2", 1},
+        {"military-science-pack", 1},
+      },
+      time = 20
+    },
+    effects =
+    {
+      {
+        type = "unlock-recipe",
+        recipe = "corpse-flare"
+      }
+    },
+    order = "b-d"
   },
 })
 
 data:extend({
   {
     type = "smoke-with-trigger",
-    name = "fart-cloud",
-    flags = {"not-on-map", "placeable-off-grid"},
+    name = "flare-cloud",
+    flags = {"not-on-map", "placeable-off-grid", },
     show_when_smoke_off = true,
     animation =
     {
@@ -26,15 +73,15 @@ data:extend({
       frame_count = 45,
       animation_speed = 0.5,
       line_length = 7,
-      scale = 3,
+      scale = 1,
     },
     slow_down_factor = 0,
     affected_by_wind = false,
     cyclic = true,
-    duration = fart_duration,
+    duration = flare_duration,
     fade_away_duration = 2 * 60,
     spread_duration = 10,
-    color = { r = 0.6, g = 0.298, b = 0.0, a = 0.5},
+    color = { r = 0.675, g = 0.078, b = 0.455 },
     action =
     {
       type = "direct",
@@ -47,56 +94,28 @@ data:extend({
           action =
           {
             type = "area",
-            perimeter = fart_range,
+            perimeter = 0,
             action_delivery =
             {
               type = "instant",
               target_effects =
               {
                 type = "damage",
-                damage = { amount = fart_damage, type = "toxic-gas"}
+                damage = { amount = 0, type = "physical"}
               }
             }
           }
         }
       }
     },
-    action_cooldown = fart_damage_interval
-  },
-
-
-
-  {
-    type = "explosion",
-    name = "fart-sound",
-    flags = {"not-on-map"},
-    animations =
-    {
-      {
-        filename = "__core__/graphics/empty.png",
-        priority = "extra-high",
-        width = 1,
-        height = 1,
-        frame_count = 1,
-        line_length = 1,
-        animation_speed = 1
-      },
-    },
-    light = {intensity = 0, size = 0},
-    sound =
-    {
-      {
-        filename = "__BugZilla__/sounds/fart1.ogg",
-        volume = 1.5
-      }
-    }
+    action_cooldown = flare_duration + 2 * 60,
   },
 
 
 
   {
     type = "projectile",
-    name = "fart",
+    name = "flare",
     flags = {"not-on-map"},
     acceleration = 0,
     direction_only = false,
@@ -111,11 +130,7 @@ data:extend({
           {
               {
                 type = "create-entity",
-                entity_name = "fart-sound"
-              },
-              {
-                type = "create-entity",
-                entity_name = "fart-cloud"
+                entity_name = "flare-cloud"
               },
           }
         }

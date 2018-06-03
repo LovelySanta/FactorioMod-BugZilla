@@ -1,4 +1,3 @@
-require 'lib/utilities/math'
 
 Boss = {}
 
@@ -151,6 +150,12 @@ function Boss.Despawn(self)
     local bossData = bossEntities[bossEntityCount]
 
     local bossEntity = bossData.bossEntity
+    local entityData = {}
+    entityData.surface = bossEntity.surface
+    entityData.name = bossEntity.name
+    entityData.position = bossEntity.position
+    entityData.force = bossEntity.force
+
     local fartEntity = bossData.fartEntity
 
     if bossEntity and bossEntity.valid and bossEntity.destroy() then
@@ -158,6 +163,9 @@ function Boss.Despawn(self)
         fartEntity.destroy()
       end
       -- game.print("DEBUG BugZilla.lib.boss.lua: BugZilla destroyed.")
+
+      -- Spawn Penalty
+      DespawnPenalty:CreateNewPenalty(entityData)
     else
       -- game.print("DEBUG BugZilla.lib.boss.lua: BugZilla not destroyed.")
     end
@@ -299,6 +307,7 @@ function Boss.SpawnReward(self, bossIndex)
   chest_entity.destructible = false
 
   local chest_inventory = chest_entity.get_inventory(defines.inventory.chest)
+
   if chest_inventory and chest_inventory.valid then
     local reward_index = math.random(#self.reward)
     local reward = self.reward[reward_index]
@@ -324,6 +333,9 @@ function Boss.SpawnReward(self, bossIndex)
       end
       amount = amount + amount_added
     end
+
+    -- Now lets cap the chest
+    chest_inventory.setbar(0)
   end
 end
 
@@ -463,6 +475,11 @@ function Boss.FartCloudBehaviour(self, bossIndex)
       area = area,
       type = 'ammo-turret',
       limit = threshold * 2
+    }
+    entities = entities + 2 * surface.count_entities_filtered{
+      area = area,
+      type = 'tree',
+      limit = Math:Round(threshold / 2)
     }
 
     if (entities >= threshold and fartEntityTimer > 1) or fartEntityTimer > 15 then

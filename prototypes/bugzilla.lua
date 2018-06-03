@@ -1,8 +1,15 @@
+-- Builder files
 require ("prototypes/bugzilla-entities")
 require ("prototypes/bugzilla-builder")
 
-require ("prototypes/fart-cloud") -- Used by bugzilla-biter
-require ("prototypes/pile-of-poop") -- Used by bugzilla-biter
+--############################################################################--
+--##########   BugZilla Biter                                       ##########--
+--############################################################################--
+require ("prototypes/fart-cloud")
+BugzillaBuilder:make_alien(bugzilla_biter)
 
--- Creating bugs
-BZ_bugzilla.functions.make_alien(bugzilla_biter)
+--############################################################################--
+--##########   BugZilla Spitter                                     ##########--
+--############################################################################--
+require ("prototypes/deadly-landmine")
+BugzillaBuilder:make_alien(bugzilla_spitter)

@@ -62,7 +62,7 @@ end
 
 function Boss.OnSecond(self)
   if self:IsAlive() then
-    if global.BZ_boss.entity.name == self.types[0] then -- bugzilla-biter
+    if global.BZ_boss.entity.name == self.types[1] then -- bugzilla-biter
       self:FartCloudBehaviour()
     end
   end
@@ -277,8 +277,8 @@ function Boss.FartCloudBehaviour(self)
   if not boss.fart_cloud then
     local pos = boss.entity.position
     local area = {
-      left_top = {pos.x-3, pos.y-3},
-      right_bottom = {pos.x+3, pos.y+3}
+      left_top = {pos.x-5, pos.y-5},
+      right_bottom = {pos.x+5, pos.y+5}
     }
     local belts = game.surfaces['nauvis'].count_entities_filtered{
       area = area,
@@ -290,10 +290,10 @@ function Boss.FartCloudBehaviour(self)
       type = 'splitter',
       limit = threshold
     }
-    belts = belts + game.surfaces['nauvis'].count_entities_filtered{
+    belts = belts + 4 * game.surfaces['nauvis'].count_entities_filtered{
       area = area,
-      type = 'splitter',
-      limit = threshold
+      type = 'land-mine',
+      limit = threshold/2
     }
 
     if belts >= threshold then
@@ -309,7 +309,6 @@ function Boss.FartCloudBehaviour(self)
   elseif boss.fart_cloud.valid then
     local pos = boss.entity.position
     local range = 10
-    game.print(range)
     local entities = game.surfaces['nauvis'].find_entities_filtered {
       area = {
         left_top = {pos.x-range, pos.y-range},

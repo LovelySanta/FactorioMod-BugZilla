@@ -280,49 +280,63 @@ function Boss.FartCloudBehaviour(self)
       left_top = {pos.x-5, pos.y-5},
       right_bottom = {pos.x+5, pos.y+5}
     }
-    local belts = game.surfaces['nauvis'].count_entities_filtered{
+    local entities = game.surfaces['nauvis'].count_entities_filtered{
       area = area,
       type = 'transport-belt',
       limit = threshold
     }
-    belts = belts + game.surfaces['nauvis'].count_entities_filtered{
+    entities = entities + game.surfaces['nauvis'].count_entities_filtered{
       area = area,
       type = 'splitter',
       limit = threshold
     }
-    belts = belts + 4 * game.surfaces['nauvis'].count_entities_filtered{
+    entities = entities + 4 * game.surfaces['nauvis'].count_entities_filtered{
       area = area,
       type = 'land-mine',
       limit = threshold/2
     }
+    entities = entities + .5 * game.surfaces['nauvis'].count_entities_filtered{
+      area = area,
+      type = 'ammo-turret',
+      limit = threshold*2
+    }
 
-    if belts >= threshold then
+    if entities >= threshold then
       boss.fart_cloud = game.surfaces['nauvis'].create_entity{
         name = 'fart-cloud',
         position = self:GetFartPosition(),
-        force = 'enemy'
+        force = 'enemy',
+        target = boss.entity,
+        speed = 0.15
+      }
+      game.surfaces['nauvis'].create_entity{
+        name = 'fart-sound',
+        position = self:GetFartPosition(),
+        force = 'enemy',
+        target = boss.entity,
+        speed = 0.15
       }
       global.BZ_boss = boss
     end
 
-  -- Fart cloud exist, time to deal some damage
-  elseif boss.fart_cloud.valid then
-    local pos = boss.entity.position
-    local range = 10
-    local entities = game.surfaces['nauvis'].find_entities_filtered {
-      area = {
-        left_top = {pos.x-range, pos.y-range},
-        right_bottom = {pos.x+range, pos.y+range}
-      },
-      force = 'player'
-    }
-    if #entities then
-      for _,entity in pairs(entities) do
-        if entity.valid and entity.destructible then
-          entity.damage(40, 'enemy', 'poison')
+    -- Fart cloud exist, time to deal some damage
+    elseif boss.fart_cloud.valid then
+      local pos = boss.fart_cloud.position
+      local range = 10/2
+      local entities = game.surfaces['nauvis'].find_entities_filtered {
+        area = {
+          left_top = {pos.x-range, pos.y-range},
+          right_bottom = {pos.x+range, pos.y+range}
+        },
+        force = 'player'
+      }
+      if #entities then
+        for _,entity in pairs(entities) do
+          if entity.valid and entity.destructible and entity.health and entity.health > 0 then
+            entity.damage(50, 'enemy', 'poison')
+          end
         end
       end
-    end
 
   -- Invalid, or fart_cloud is gone
   else

@@ -93,7 +93,7 @@ end
 
 function PhaseCycler.OnSettingsChanged(self, event)
   if event.setting_type == "runtime-global" then
-    MessageAll(game.players[event.player_index].name .. " changed setting " .. event.setting)
+    -- MessageAll(game.players[event.player_index].name .. " changed setting " .. event.setting)
 
     if global.BZ_data ~= nil then
       local currentState = global.BZ_data.currentState

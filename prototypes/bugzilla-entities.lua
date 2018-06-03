@@ -26,7 +26,7 @@ bugzilla_biter =
       damage = 550,
     },
     resistance = {
-      {type = "physical", decrease = 5, percent = 75},
+      {type = "physical", decrease = 8, percent = 75},
       {type = "fire", decrease = 25, percent = 75},
       {type = "explosion", decrease = 20, percent = 75},
       {type = "laser", decrease = 15, percent = 75}

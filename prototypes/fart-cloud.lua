@@ -1,4 +1,6 @@
-
+local fart_duration = 60 * 5 -- in ticks
+local fart_damage = 70 -- each second
+local fart_range = 10 -- radius
 
 data:extend({
   {
@@ -21,7 +23,7 @@ data:extend({
     slow_down_factor = 0,
     affected_by_wind = false,
     cyclic = true,
-    duration = 60 * 5,
+    duration = fart_duration,
     fade_away_duration = 2 * 60,
     spread_duration = 10,
     color = { r = 0.6, g = 0.298, b = 0.0 },
@@ -37,15 +39,15 @@ data:extend({
           action =
           {
             type = "area",
-            perimeter = 10,
-            entity_flags = {"breaths-air"},
+            perimeter = fart_range,
+            entity_flags = {},
             action_delivery =
             {
               type = "instant",
               target_effects =
               {
                 type = "damage",
-                damage = { amount = 0, type = "poison"}
+                damage = { amount = fart_damage/60, type = "poison"}
               }
             }
           }
@@ -53,5 +55,33 @@ data:extend({
       }
     },
     action_cooldown = 30
+  },
+
+
+
+  {
+    type = "explosion",
+    name = "fart-sound",
+    flags = {"not-on-map"},
+    animations =
+    {
+      {
+        filename = "__core__/graphics/empty.png",
+        priority = "high",
+        width = 1,
+        height = 1,
+        frame_count = 1,
+        line_length = 1,
+        animation_speed = 1
+      },
+    },
+    light = {intensity = 0, size = 0},
+    sound =
+    {
+      {
+        filename = "__BugZilla__/sounds/fart1.ogg",
+        volume = 0.6
+      }
+    }
   }
 })

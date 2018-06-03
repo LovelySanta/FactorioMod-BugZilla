@@ -1,6 +1,14 @@
 local fart_duration = 60 * 5 -- in ticks
-local fart_damage = 70 -- each second
-local fart_range = 10 -- radius
+local fart_damage = 30 -- each interval
+local fart_damage_interval = 30 -- in ticks
+local fart_range = 6 -- radius
+
+data:extend({
+  {
+    type = "damage-type",
+    name = "toxic-gas"
+  },
+})
 
 data:extend({
   {
@@ -40,21 +48,20 @@ data:extend({
           {
             type = "area",
             perimeter = fart_range,
-            entity_flags = {},
             action_delivery =
             {
               type = "instant",
               target_effects =
               {
                 type = "damage",
-                damage = { amount = fart_damage/60, type = "poison"}
+                damage = { amount = fart_damage, type = "toxic-gas"}
               }
             }
           }
         }
       }
     },
-    action_cooldown = 30
+    action_cooldown = fart_damage_interval
   },
 
 
@@ -67,7 +74,7 @@ data:extend({
     {
       {
         filename = "__core__/graphics/empty.png",
-        priority = "high",
+        priority = "extra-high",
         width = 1,
         height = 1,
         frame_count = 1,
@@ -80,8 +87,49 @@ data:extend({
     {
       {
         filename = "__BugZilla__/sounds/fart1.ogg",
-        volume = 0.6
+        volume = 1.5
       }
     }
+  },
+
+
+
+  {
+    type = "projectile",
+    name = "fart",
+    flags = {"not-on-map"},
+    acceleration = 0,
+    direction_only = false,
+    action =
+    {
+      {
+        type = "direct",
+        action_delivery =
+        {
+          type = "instant",
+          target_effects =
+          {
+              {
+                type = "create-entity",
+                entity_name = "fart-sound"
+              },
+              {
+                type = "create-entity",
+                entity_name = "fart-cloud"
+              },
+          }
+        }
+      }
+    },
+    animation =
+    {
+      filename = "__core__/graphics/empty.png",
+      priority = "high",
+      width = 1,
+      height = 1,
+      frame_count = 1,
+      line_length = 1,
+      animation_speed = 1
+    },
   }
 })

@@ -1,6 +1,6 @@
 The goal of this mod is to prepare a base in a limited amount of time, after that, one big happy bug comes and walks all over your base. It's your task to survive, rebuild, defeat! And most of all: having fun with friends.
 
-![Screenshot of BugZilla biter attacking a wall with defences](https://raw.githubusercontent.com/LovelySanta/FactorioMods/master/BugZilla/graphics/screenshots/BugZilla_Biter_attack.png)
+![Screenshot of BugZilla biter attacking a wall with defences](https://raw.githubusercontent.com/LovelySanta/FactorioMod-BugZilla/master/graphics/screenshots/BugZilla_Biter_attack.png)
 
 # Settings
 The mod is made so you can change all settings while playing. This way you can adapt the mod to your needs, at your own time, providing you the best experience possible!
@@ -26,4 +26,4 @@ This settings (minimum and maximum) defines where BugZilla will spawn. I left th
 ### Future
 +   Bugs getting harder to kill over time (rework)
 ### Latest release
-+ See ingame changelog or find it [here on github](https://github.com/LovelySanta/FactorioMods/blob/master/BugZilla/changelog.txt).
++ See ingame changelog or find it [here on github](https://github.com/LovelySanta/FactorioMod-BugZilla/blob/master/changelog.txt).

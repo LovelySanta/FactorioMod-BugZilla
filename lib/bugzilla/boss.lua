@@ -4,6 +4,9 @@ Boss = {}
 Boss.types = {
   [1] = "bugzilla-biter",
 }
+Boss.displayNames = {
+  [1] = "BugZilla Biter"
+}
 
 Boss.messages = {}
 Boss.messages.spawn_messages = {
@@ -42,6 +45,8 @@ function Boss.Init(self)
   if not global.BZ_boss then
     global.BZ_boss = self:InitGlobalData()
   end
+
+  self:InitChatToFile()
 end
 
 
@@ -89,6 +94,8 @@ function Boss.OnConfigurationChanged(self)
     -- current version running: 3
     global.BZ_boss = bossData
   end
+
+  self:InitChatToFile()
 end
 
 
@@ -113,6 +120,17 @@ function Boss.InitGlobalData(self)
     killCount = DeepCopy(kills),
   }
   return DeepCopy(bossData)
+end
+
+
+
+function Boss.InitChatToFile(self)
+  -- If mod ChatToFile is in the modlist, we can print this out too
+  if remote.interfaces.ChatToFile and remote.interfaces.ChatToFile.remoteAddDisplayName then
+    for k,type in pairs(self.types) do
+      remote.call("ChatToFile", "remoteAddDisplayName", type, self.displayNames[k])
+    end
+  end
 end
 
 
